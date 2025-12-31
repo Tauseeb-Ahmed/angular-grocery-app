@@ -3,10 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { GroceryService } from '../../core/services/grocery.services';
 import { Grocery } from '../../core/models/grocery.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-grocery-detail',
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './grocery-detail.html',
   styleUrl: './grocery-detail.scss',
 })
@@ -18,16 +20,16 @@ export class GroceryDetailComponent {
   item?: Grocery;
 
   constructor() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const id = this.route.snapshot.paramMap.get('id');
 
-    if (isNaN(id)) {
+    if(!id){
       this.router.navigate(['/']);
       return;
-    }
+    }  
 
     this.item = this.groceryService.getById(id);
 
-    if (!this.item) {
+    if(!this.item){
       this.router.navigate(['/']);
     }
   }
