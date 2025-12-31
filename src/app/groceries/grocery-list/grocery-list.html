@@ -1,24 +1,57 @@
 <div class="page">
   <h1>My Groceries</h1>
 
-  <!-- read the computed signal directly -->
-  @if (groceryService.groceries(); as groceries) {
+  <!-- ADD GROCERY FORM -->
+  <div class="add-form">
+    <input
+      type="text"
+      placeholder="Item name"
+      #nameInput
+    />
+
+    <input
+      type="number"
+      placeholder="Quantity"
+      min="1"
+      #quantityInput
+    />
+
+    <input
+      type="text"
+      placeholder="Image URL (optional)"
+      #imageInput
+    />
+
+    <button
+      (click)="addItem(
+        nameInput.value,
+        quantityInput.value,
+        imageInput.value
+      )"
+    >
+      Add Grocery
+    </button>
+  </div>
+
+  @if (groceryService.groceries().length > 0) {
     <div class="grid">
-      @for (g of groceries; track g.id) {
+      @for (g of groceryService.groceries(); track g.id) {
         <div class="card" (click)="viewDetail(g)">
           @if (g.image) {
             <div class="card-image">
               <img [src]="g.image" [alt]="g.name" />
             </div>
           }
+
           <div class="card-body">
             <h3 class="name">{{ g.name }}</h3>
             <p class="qty">Quantity: {{ g.quantity }}</p>
           </div>
-        </div>  
+        </div>
       }
     </div>
-  } else {
+  }
+  @else {
     <p>No groceries yet.</p>
   }
 </div>
