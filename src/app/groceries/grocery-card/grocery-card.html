@@ -1,0 +1,18 @@
+<div class="card" (click)="onView()">
+  <div class="card-image">
+    <img
+      [src]="item.image || fallbackImage"
+      [alt]="item.name"
+      (error)="onImageError($event)"
+    />
+  </div>
+
+  <div class="card-body">
+    <h3 class="name">{{ item.name }}</h3>
+    <p class="qty">Quantity: {{ item.quantity }}</p>
+
+    <button class="delete-btn" (click)="onDelete($event)">
+      Delete
+    </button>
+  </div>
+</div>

@@ -1,37 +1,46 @@
 <div class="page">
   <h1>My Groceries</h1>
 
-  <!-- ADD GROCERY FORM -->
-  <div class="add-form">
-    <input type="text" placeholder="Item name" #nameInput />
-    <input type="number" placeholder="Quantity" min="1" #quantityInput />
-    <input type="text" placeholder="Image URL (optional)" #imageInput />
+  <form
+    class="add-form"
+    [formGroup]="addForm"
+    (ngSubmit)="addItem()"
+    novalidate
+  >
+    <div>
+      <input type="text" placeholder="Item name" formControlName="name" />
+      @if (addForm.controls.name.touched && addForm.controls.name.errors?.['required']) {
+        <small class="error">Item name is required</small>
+      }
+      @if (addForm.controls.name.errors?.['duplicateName']) {
+        <small class="error">An item with this name already exists</small>
+      }
+    </div>
 
-    <button (click)="addItem(nameInput.value, quantityInput.value, imageInput.value)">
+    <div>
+      <input type="number" min="1" placeholder="Quantity" formControlName="quantity" />
+    </div>
+
+    <div>
+      <input type="text" placeholder="Image URL (optional)" formControlName="image" />
+    </div>
+
+    <button type="submit" [disabled]="addForm.invalid">
       Add Grocery
     </button>
-  </div>
+  </form>
 
   @if (groceryService.groceries().length > 0) {
-  <div class="grid">
-    @for (g of groceryService.groceries(); track g.id) {
-    <div class="card" (click)="viewDetail(g)">
-      @if (g.image) {
-      <div class="card-image">
-        <img [src]="g.image" [alt]="g.name" />
-      </div>
+    <div class="grid">
+      @for (g of groceryService.groceries(); track g.id) {
+        <app-grocery-card
+          [item]="g"
+          (view)="viewDetail($event)"
+          (delete)="deleteItem($event)">
+        </app-grocery-card>
       }
-
-      <div class="card-body">
-        <h3 class="name">{{ g.name }}</h3>
-        <p class="qty">Quantity: {{ g.quantity }}</p>
-
-        <button class="delete-btn" (click)="deleteItem(g.id,$event)">Delete</button>
-      </div>
     </div>
-    }
-  </div>
   } @else {
-  <p>No groceries yet.</p>
+    <p>No groceries yet.</p>
   }
 </div>
